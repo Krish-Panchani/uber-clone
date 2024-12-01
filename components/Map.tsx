@@ -52,12 +52,10 @@ const drivers = [
 const Map = () => {
   const { userLongitude, userLatitude, destinationLatitude, destinationLongitude } =
     useLocationStore();
-
   const { selectedDriver, setDrivers } = useDriverStore();
 
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-
-  const initialRegion = useRef(
+  const [region, setRegion] = useState(
     calculateRegion({
       userLatitude,
       userLongitude,
@@ -67,28 +65,49 @@ const Map = () => {
   );
 
   useEffect(() => {
-    if (Array.isArray(drivers)) {
-      if (!userLatitude || !userLongitude) return;
+    const requestPermissions = async () => {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          console.error('Location permission denied');
+        }
+      }
+    };
 
+    requestPermissions();
+  }, []);
+
+  useEffect(() => {
+    if (userLatitude && userLongitude) {
       const newMarkers = generateMarkersFromData({
         data: drivers,
         userLatitude,
         userLongitude,
       });
-
       setMarkers(newMarkers);
+
+      // Update region dynamically
+      setRegion(
+        calculateRegion({
+          userLatitude,
+          userLongitude,
+          destinationLatitude,
+          destinationLongitude,
+        }),
+      );
     }
-  }, [drivers, userLatitude, userLongitude]);
+  }, [drivers, userLatitude, userLongitude, destinationLatitude, destinationLongitude]);
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={initialRegion.current}
+        region={region} // Dynamically updated region
         showsPointsOfInterest={false}
-        // showsUserLocation={true}
         userInterfaceStyle="light">
-        {markers.map((marker, index) => (
+        {markers.map((marker) => (
           <Marker
             key={marker.id}
             coordinate={{
