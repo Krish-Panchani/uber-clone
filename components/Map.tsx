@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, StyleSheet, PermissionsAndroid } from 'react-native';
+import { View, StyleSheet, PermissionsAndroid, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { calculateRegion, generateMarkersFromData } from '@/lib/map';
 import { useDriverStore, useLocationStore } from '@/store';
