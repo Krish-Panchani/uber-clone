@@ -8,6 +8,7 @@ import { icons, images } from '@/constants';
 import GoogleTextInput from '@/components/GoogleTextInput';
 import Map from '@/components/Map';
 import { useLocationStore } from '@/store';
+import { router } from 'expo-router';
 
 const recentRides = [
   {
@@ -120,7 +121,15 @@ export default function Page() {
   const [hasPermission, setHasPermission] = useState(false);
 
   const handleSignOut = () => {};
-  const handlwDestinationPress = () => {};
+  const handleDestinationPress = (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => {
+    setDestinationLocation(location);
+
+    router.push('/(root)/find-ride');
+  };
 
   useEffect(() => {
     const requestLocation = async () => {
@@ -196,7 +205,7 @@ export default function Page() {
             <GoogleTextInput
               icons={icons.search}
               containerStyle="bg-white shadow-md shadow-neutral-300"
-              handlePress={handlwDestinationPress}
+              handlePress={handleDestinationPress}
             />
             <>
               <Text className="text-xl font-JakartaBold mt-5 mb-3">Your Current Location</Text>
