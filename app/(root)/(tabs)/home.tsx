@@ -9,6 +9,7 @@ import GoogleTextInput from '@/components/GoogleTextInput';
 import Map from '@/components/Map';
 import { useLocationStore } from '@/store';
 import { router } from 'expo-router';
+import { useFetch } from '@/lib/fetch';
 
 const recentRides = [
   {
@@ -116,7 +117,8 @@ const recentRides = [
 export default function Page() {
   const { setUserLocation, setDestinationLocation } = useLocationStore();
   const { user } = useUser();
-  const loading = true;
+
+  const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
 
   const [hasPermission, setHasPermission] = useState(false);
 
@@ -162,7 +164,7 @@ export default function Page() {
   }, [setUserLocation]);
 
   return (
-    <SafeAreaView className="bg-general-500">
+    <SafeAreaView className="bg-general-500 mb-8">
       <FlatList
         data={recentRides?.slice(0, 5)}
         renderItem={({ item }) => <RideCard ride={item} />}
