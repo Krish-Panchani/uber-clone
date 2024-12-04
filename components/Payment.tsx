@@ -24,6 +24,41 @@ const Payment = ({ fullName, email, amount, driverId, rideTime }: PaymentProps) 
 
   const { userId } = useAuth();
   const [success, setSuccess] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  // Function to open custom payment modal
+  const openPaymentModal = async () => {
+    setIsModalVisible(true);
+  };
+
+  // Function to handle "Pay Now" click
+  const handlePayNow = async () => {
+    try {
+      await fetchAPI('/(api)/ride/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          origin_address: userAddress,
+          destination_address: destinationAddress,
+          origin_latitude: userLatitude,
+          origin_longitude: userLongitude,
+          destination_latitude: destinationLatitude,
+          destination_longitude: destinationLongitude,
+          ride_time: rideTime.toFixed(0),
+          fare_price: parseInt(amount) * 100,
+          payment_status: 'paid',
+          driver_id: driverId,
+          user_id: userId,
+        }),
+      });
+      setIsModalVisible(false);
+      setSuccess(true);
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while processing the payment.');
+    }
+  };
 
   const openPaymentSheet = async () => {
     await initializePaymentSheet();
@@ -111,7 +146,19 @@ const Payment = ({ fullName, email, amount, driverId, rideTime }: PaymentProps) 
 
   return (
     <>
-      <CustomButton title="Confirm Ride" className="my-10" onPress={openPaymentSheet} />
+      <CustomButton title="Confirm Ride" className="my-10" onPress={openPaymentModal} />
+
+      {/* Custom Payment Modal */}
+      <ReactNativeModal isVisible={isModalVisible} onBackdropPress={() => setIsModalVisible(false)}>
+        <View className="flex flex-col items-center justify-center bg-white p-7 rounded-2xl">
+          <Image source={images.check} className="w-28 h-28 mt-5" />
+          <Text className="text-2xl text-center font-JakartaBold mt-5">Pay ${amount}</Text>
+          <Text className="text-md text-general-200 font-JakartaRegular text-center mt-3">
+            Confirm your payment to proceed with the ride.
+          </Text>
+          <CustomButton title="Pay Now" onPress={handlePayNow} className="mt-5" />
+        </View>
+      </ReactNativeModal>
 
       <ReactNativeModal isVisible={success} onBackdropPress={() => setSuccess(false)}>
         <View className="flex flex-col items-center justify-center bg-white p-7 rounded-2xl">
