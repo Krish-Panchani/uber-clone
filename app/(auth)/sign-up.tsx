@@ -112,11 +112,13 @@ const SignUp = () => {
             secureTextEntry={true}
             onChangeText={(value) => setForm({ ...form, password: value })}
           />
-          <CustomButton title="Sign Up" onPress={onSignUpPress} className="mt-6" />\{/* OAuth */}
+          <CustomButton title="Sign Up" onPress={onSignUpPress} className="mt-6" />
+          {/* OAuth */}
           <OAuth />
           <View>
             <Link href="/sign-in" className="text-lg text-center text-general-200 mt-10">
-              Already have an account? <Text className="text-primary-500">Log In</Text>
+              <Text>Already have an account? </Text>
+              <Text className="text-primary-500">Log In</Text>
             </Link>
           </View>
           {/* Verification */}
