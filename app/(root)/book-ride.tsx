@@ -1,3 +1,4 @@
+import React from 'react';
 import { useUser } from '@clerk/clerk-expo';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { Image, Text, View } from 'react-native';
