@@ -6,6 +6,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   Platform,
+  Alert,
 } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -98,12 +99,14 @@ const Map = () => {
       </View>
     );
 
-  if (error)
+  if (error) {
+    Alert.alert('Error', error.toString());
     return (
       <View style={styles.centered}>
         <Text>Error: {error}</Text>
       </View>
     );
+  }
 
   return (
     <View style={styles.container}>
