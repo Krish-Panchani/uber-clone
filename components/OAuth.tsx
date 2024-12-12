@@ -19,7 +19,8 @@ const OAuth = () => {
       }
       Alert.alert(result.success ? 'Success' : 'Error', result.message);
     } catch (err) {
-      console.error('OAuth error', err);
+      // console.error('OAuth error', err);
+      Alert.alert('Error', 'OAuth error');
     }
   }, []);
 
