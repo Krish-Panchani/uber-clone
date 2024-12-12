@@ -6,7 +6,7 @@ import { useSignIn } from '@clerk/clerk-expo';
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import { useState } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
 const SignIn = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
@@ -33,10 +33,15 @@ const SignIn = () => {
       } else {
         // See https://clerk.com/docs/custom-flows/error-handling
         // for more info on error handling
-        console.error(JSON.stringify(signInAttempt, null, 2));
+        // console.error(JSON.stringify(signInAttempt, null, 2));
+        Alert.alert(
+          'Error',
+          signInAttempt.firstFactorVerification?.error?.message || 'An unknown error occurred',
+        );
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      // console.error(JSON.stringify(err, null, 2));
+      Alert.alert('Error', err.errors[0].longMessage);
     }
   }, [isLoaded, form.email, form.password]);
 
@@ -66,11 +71,13 @@ const SignIn = () => {
             secureTextEntry={true}
             onChangeText={(value) => setForm({ ...form, password: value })}
           />
-          <CustomButton title="Sign In" onPress={onSignInPress} className="mt-6" />\{/* OAuth */}
+          <CustomButton title="Sign In" onPress={onSignInPress} className="mt-6" />
+          {/* OAuth */}
           <OAuth />
           <View>
             <Link href="/sign-up" className="text-lg text-center text-general-200 mt-10">
-              Don't have an account? <Text className="text-primary-500">Sign Up</Text>
+              <Text>Don't have an account? </Text>
+              <Text className="text-primary-500">Sign Up</Text>
             </Link>
           </View>
           {/* Verification */}
