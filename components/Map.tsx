@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+
 import MapView, { Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
@@ -104,6 +105,15 @@ const Map = () => {
     return (
       <View style={styles.centered}>
         <Text>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  if (Platform.OS === 'web') {
+    // Web fallback: Inform user that maps are unavailable
+    return (
+      <View style={styles.centered}>
+        <Text>Map functionality is not available on the web version.</Text>
       </View>
     );
   }
