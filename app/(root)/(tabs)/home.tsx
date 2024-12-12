@@ -1,7 +1,15 @@
 import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/clerk-expo';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RideCard from '@/components/RideCard';
 import { icons, images } from '@/constants';
@@ -59,7 +67,8 @@ export default function Page() {
         });
         setHasPermission(true);
       } catch (error) {
-        console.error('Error fetching location:', error);
+        // console.error('Error fetching location:', error);
+        Alert.alert('Error', 'An error occurred while fetching your location');
       }
     };
 
